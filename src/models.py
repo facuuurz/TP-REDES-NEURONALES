@@ -3,15 +3,22 @@
 from tensorflow import keras
 
 
-def build_cnn():
+RECURRENT_CELLS = {
+    "simple_rnn": keras.layers.SimpleRNN,
+    "lstm": keras.layers.LSTM,
+    "gru": keras.layers.GRU,
+}
+
+
+def build_cnn(last_stride=2):
     model = keras.Sequential(
         [
             keras.layers.Input((32, 32, 1)),
-            keras.layers.Conv2D(32, 3, padding="same", activation="relu"),
-            keras.layers.MaxPooling2D(2),
-            keras.layers.Conv2D(64, 3, padding="same", activation="relu"),
-            keras.layers.MaxPooling2D(2),
-            keras.layers.Conv2D(64, 3, padding="same", activation="relu"),
+            keras.layers.Conv2D(32, 3, strides=1, padding="same", activation="relu"),
+            keras.layers.MaxPooling2D(pool_size=2, strides=2),
+            keras.layers.Conv2D(64, 3, strides=1, padding="same", activation="relu"),
+            keras.layers.MaxPooling2D(pool_size=2, strides=2),
+            keras.layers.Conv2D(64, 3, strides=last_stride, padding="same", activation="relu"),
             keras.layers.GlobalAveragePooling2D(),
             keras.layers.Dense(64, activation="relu"),
             keras.layers.Dropout(0.25),
@@ -26,14 +33,18 @@ def build_cnn():
     return model
 
 
-def build_gru(lookback=36):
+def build_recurrent(cell="gru", lookback=36):
     model = keras.Sequential(
         [
             keras.layers.Input((lookback, 4)),
-            keras.layers.GRU(32, activation="tanh", recurrent_activation="sigmoid"),
+            RECURRENT_CELLS[cell](32),
             keras.layers.Dense(16, activation="relu"),
             keras.layers.Dense(1),
         ]
     )
     model.compile(optimizer=keras.optimizers.Adam(1e-3, clipnorm=1.0), loss="mse")
     return model
+
+
+def build_gru(lookback=36):
+    return build_recurrent("gru", lookback)

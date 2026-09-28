@@ -39,18 +39,16 @@ def temporal_series(length=1600, seed=42):
     sine = np.sin(2 * np.pi * time / 48)
     cosine = np.cos(2 * np.pi * time / 48)
     control = np.zeros(length, dtype=np.float32)
+    expected = np.zeros(length, dtype=np.float32)
     noise = rng.normal(0, 0.11, length)
     control_noise = rng.normal(0, 0.14, length)
     for t in range(1, length):
         control[t] = 0.78 * control[t - 1] + control_noise[t]
-        target[t] = (
-            0.65 * target[t - 1]
-            + 0.25 * sine[t]
-            + 0.13 * control[t - 1]
-            + noise[t]
-        )
+        mean = 0.65 * target[t - 1] + 0.25 * sine[t] + 0.13 * control[t - 1]
+        expected[t] = mean
+        target[t] = mean + noise[t]
     features = np.column_stack([target, sine, cosine, control]).astype(np.float32)
-    return features, target
+    return features, target, expected
 
 
 def chronological_windows(features, target, start, stop, lookback=36):
@@ -62,7 +60,7 @@ def chronological_windows(features, target, start, stop, lookback=36):
 
 
 def temporal_splits(lookback=36):
-    features, target = temporal_series()
+    features, target, _ = temporal_series()
     ranges = {"train": (0, 960), "validation": (960, 1280), "test": (1280, 1600)}
     splits = {
         name: chronological_windows(features, target, start, stop, lookback)

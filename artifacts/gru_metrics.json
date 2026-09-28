@@ -27,10 +27,35 @@
   "test_rmse": 0.1201,
   "persistence_test_mae": 0.1139,
   "persistence_test_rmse": 0.1428,
+  "noise_floor_test_mae": 0.0917,
+  "noise_floor_test_rmse": 0.115,
   "test_mae_by_chronological_quarter": [
     0.0987,
     0.1002,
     0.0947,
     0.0902
-  ]
+  ],
+  "cell_comparison": {
+    "gru": {
+      "parameters": 4193,
+      "best_epoch": 45,
+      "validation_mae": 0.0891,
+      "test_mae": 0.096,
+      "test_rmse": 0.1201
+    },
+    "lstm": {
+      "parameters": 5281,
+      "best_epoch": 54,
+      "validation_mae": 0.0949,
+      "test_mae": 0.1,
+      "test_rmse": 0.1244
+    },
+    "simple_rnn": {
+      "parameters": 1729,
+      "best_epoch": 24,
+      "validation_mae": 0.0896,
+      "test_mae": 0.0981,
+      "test_rmse": 0.1223
+    }
+  }
 }
