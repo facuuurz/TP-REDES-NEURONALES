@@ -1,0 +1,215 @@
+{
+  "dataset": "sklearn digits with deterministic simulated visual batches",
+  "samples": {
+    "development": 1207,
+    "test": 590
+  },
+  "test_groups": [
+    8,
+    9,
+    10,
+    11
+  ],
+  "group_kfold": [
+    {
+      "fold": 1,
+      "training_groups": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        7
+      ],
+      "validation_groups": [
+        0,
+        6
+      ],
+      "training_accuracy": 0.9158,
+      "validation_accuracy": 0.9079,
+      "best_epoch": 22
+    },
+    {
+      "fold": 2,
+      "training_groups": [
+        0,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "validation_groups": [
+        1,
+        7
+      ],
+      "training_accuracy": 0.9669,
+      "validation_accuracy": 0.957,
+      "best_epoch": 22
+    },
+    {
+      "fold": 3,
+      "training_groups": [
+        0,
+        1,
+        4,
+        5,
+        6,
+        7
+      ],
+      "validation_groups": [
+        2,
+        3
+      ],
+      "training_accuracy": 0.9536,
+      "validation_accuracy": 0.9236,
+      "best_epoch": 28
+    },
+    {
+      "fold": 4,
+      "training_groups": [
+        0,
+        1,
+        2,
+        3,
+        6,
+        7
+      ],
+      "validation_groups": [
+        4,
+        5
+      ],
+      "training_accuracy": 0.9294,
+      "validation_accuracy": 0.9367,
+      "best_epoch": 27
+    }
+  ],
+  "cross_validation_accuracy_mean": 0.9313,
+  "cross_validation_accuracy_std": 0.018,
+  "selected_epochs": 24,
+  "final_training_accuracy": 0.9677,
+  "test_accuracy": 0.9593,
+  "test_macro_f1": 0.9595,
+  "confusion_matrix": [
+    [
+      58,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      59,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      56,
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      55,
+      0,
+      0,
+      0,
+      2,
+      0,
+      3
+    ],
+    [
+      0,
+      2,
+      0,
+      0,
+      58,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      58,
+      0,
+      0,
+      1,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      60,
+      0,
+      0,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      57,
+      0,
+      1
+    ],
+    [
+      0,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      53,
+      0
+    ],
+    [
+      0,
+      0,
+      0,
+      4,
+      0,
+      2,
+      0,
+      2,
+      0,
+      52
+    ]
+  ]
+}

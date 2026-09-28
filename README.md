@@ -1,15 +1,15 @@
 # Trabajo práctico integrador: CNN y GRU con Keras
 
-Implementación reproducible de los dos módulos de la consigna. Los dígitos vienen incluidos en scikit-learn; los lotes visuales y la serie temporal se generan localmente con semillas fijas. No se descarga información externa. Las conclusiones sobre nuevos tipos de adquisición y procesos temporales reales son limitadas.
+Implementación reproducible de los dos módulos de la consigna en `consigna/TP_REDES_NEURONALES.pdf`. Los dígitos vienen incluidos en scikit-learn; los lotes visuales y la serie temporal se generan localmente con semillas fijas. No se descargan datos externos. Los lotes son simulados y la serie es sintética, por lo que los resultados no prueban generalización a escritores nuevos ni a procesos temporales reales.
 
 ## Entregables
 
-- `informe/Informe_tecnico.pdf`: metodología, justificación matemática, resultados y límites (máximo cinco páginas).
-- `src/` y `train.py`: generación, partición, entrenamiento y evaluación de ambos modelos.
-- `artifacts/cnn.keras` y `artifacts/gru.keras`: modelos completos, incluidos sus pesos; también se incluyen `*.weights.h5`.
-- `artifacts/gru_scalers.npz`: medias y desviaciones necesarias para inferencia con la GRU.
-- `artifacts/*_metrics.json`, `artifacts/*_learning_curve.png`: métricas y curvas observadas.
-- `predict.py`: carga los modelos y ejecuta ejemplos de inferencia.
+- `informe/Informe_tecnico.pdf`: informe técnico de tres páginas, con diseño, resultados y límites.
+- `src/`, `train.py`, `predict.py` y `tests/`: generación, partición, entrenamiento, evaluación, inferencia y comprobaciones de las fronteras de datos. El código Python está redactado en inglés.
+- `artifacts/cnn.keras` y `artifacts/gru.keras`: modelos completos con arquitectura y pesos; también se entregan `*.weights.h5`.
+- `artifacts/gru_scalers.npz`: escaladores ajustados solo con datos de entrenamiento, necesarios para interpretar la salida de la GRU.
+- `artifacts/*_metrics.json`, `artifacts/cnn_fold_accuracy.png` y `artifacts/gru_learning_curve.png`: métricas y gráficos observados.
+- `consigna/TP_REDES_NEURONALES.pdf`: consigna original.
 
 ## Ejecución
 
@@ -19,18 +19,23 @@ Se recomienda Python 3.12:
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-python train.py
-python predict.py
 python -m unittest discover -s tests -v
+python predict.py
+```
+
+En Windows, activar con `.venv\Scripts\activate`. Para repetir el entrenamiento y regenerar el informe:
+
+```bash
+python train.py
 python make_report.py
 ```
 
-En Windows, activar con `.venv\Scripts\activate`. La ejecución en CPU puede tardar varios minutos. `train.py` sobrescribe los artefactos con un nuevo entrenamiento.
+El entrenamiento sobrescribe los artefactos. En CPU puede tardar varios minutos.
 
-## Diseño y evaluación
+## Diseño y resultados
 
-La CNN clasifica 1797 imágenes reales de dígitos manuscritos (10 clases) incluidas en `sklearn.datasets.load_digits`. Las imágenes originales de 8 × 8 se interpolan a 32 × 32 y se asignan una sola vez a 12 lotes de adquisición simulados, cada uno con brillo, contraste, desenfoque y ruido propios. Los lotes 0–7 se destinan al desarrollo, con cuatro particiones `GroupKFold`; los 8–11 se reservan para prueba. Tras la validación, se entrena un modelo final con todos los lotes de desarrollo durante la mediana de las épocas óptimas. No hay imágenes repetidas entre grupos. No se conocen identificadores de escritor, por lo que esta prueba no demuestra generalización a autores nuevos.
+La CNN clasifica 1797 imágenes de dígitos manuscritos (10 clases) de `sklearn.datasets.load_digits`. Las imágenes originales de 8 × 8 se interpolan a 32 × 32 y se asignan una sola vez a 12 lotes de adquisición simulados, cada uno con brillo, contraste y desenfoque propios. Los lotes 0–7 se usan para desarrollo, con cuatro divisiones GroupKFold; los 8–11 se reservan para prueba. La exactitud media de validación fue 0,9313 ± 0,0180 y la exactitud de prueba fue 0,9593 (F1 macro 0,9595).
 
-La GRU pronostica un paso adelante en una serie multivariable de 1600 instantes. Las variables son el valor anterior, componentes estacionales senoidales y un control autorregresivo. La división cronológica es entrenamiento `[0,960)`, validación `[960,1280)` y prueba `[1280,1600)`. Cada ventana de 36 pasos queda completamente dentro de su tramo. Los escaladores se ajustan solo con entrenamiento. La comparación básica es la persistencia del último valor observado.
+La GRU pronostica un paso adelante en una serie multivariable sintética de 1600 instantes. La división cronológica es entrenamiento `[0,960)`, validación `[960,1280)` y prueba `[1280,1600)`. Cada ventana de 36 pasos queda completamente dentro de su tramo y los escaladores se ajustan solo con entrenamiento. En prueba obtuvo MAE 0,0960 y RMSE 0,1201, frente a MAE 0,1139 y RMSE 0,1428 del pronóstico de persistencia.
 
-En ambas tareas, el conjunto de prueba se evalúa una sola vez después de fijar el entrenamiento. Los generadores están disponibles en `src/data.py`, por lo que los pesos exportados se pueden volver a evaluar sin descargar datos.
+Las métricas detalladas, incluidos folds, matriz de confusión y evolución temporal del error, están en `artifacts/`. El conjunto de prueba se evalúa después de seleccionar los modelos y se mantiene separado de la validación.

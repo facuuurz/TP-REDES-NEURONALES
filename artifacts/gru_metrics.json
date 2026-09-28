@@ -1,0 +1,36 @@
+{
+  "dataset": "deterministic synthetic multivariate autoregressive time series",
+  "ranges": {
+    "train": [
+      0,
+      960
+    ],
+    "validation": [
+      960,
+      1280
+    ],
+    "test": [
+      1280,
+      1600
+    ]
+  },
+  "window_counts": {
+    "train": 924,
+    "validation": 284,
+    "test": 284
+  },
+  "lookback": 36,
+  "best_epoch": 45,
+  "training_mae": 0.0841,
+  "validation_mae": 0.0891,
+  "test_mae": 0.096,
+  "test_rmse": 0.1201,
+  "persistence_test_mae": 0.1139,
+  "persistence_test_rmse": 0.1428,
+  "test_mae_by_chronological_quarter": [
+    0.0987,
+    0.1002,
+    0.0947,
+    0.0902
+  ]
+}
